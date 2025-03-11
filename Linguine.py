@@ -107,18 +107,50 @@ def GeodesicEquations():
     d2R=SecondPartialDerivative()
     CH_Symbols=ChristoffelSymbols()
     
-
-    d2udτ2=-((CH_Symbols[0]*(dudτ)*(dudτ))
-            +(CH_Symbols[2]*(dudτ)*(dvdτ))
-            +(CH_Symbols[4]*(dudτ)*(dvdτ))
-            +(CH_Symbols[6]*(dvdτ)*(dvdτ)))
-    d2vdτ2=-(CH_Symbols[1]*(dudτ)*(dudτ)
-            +(CH_Symbols[3]*(dudτ)*(dvdτ))
-            +(CH_Symbols[5]*(dudτ)*(dvdτ))
-            +(CH_Symbols[7]*(dvdτ)*(dvdτ)))
-        
     #Inplement the Runge-Kutta Method of Order 4 to Solve The Geodesic Equations
-    
+    for i in range(10): 
+        k1=-dτ*((CH_Symbols[0].subs({U:uτ,V:vτ})*(dudτ)*(dudτ))
+               +(CH_Symbols[2].subs({U:uτ,V:vτ})*(dudτ)*(dvdτ))
+               +(CH_Symbols[4].subs({U:uτ,V:vτ}))*(dudτ)*(dvdτ)
+               +(CH_Symbols[6].subs({U:uτ,V:vτ})*(dvdτ)*(dvdτ)))
+        j1=-dτ*((CH_Symbols[1].subs({U:uτ,V:vτ})*(dudτ)*(dudτ))
+                +(CH_Symbols[3].subs({U:uτ,V:vτ})*(dudτ)*(dvdτ))
+                +(CH_Symbols[5].subs({U:uτ,V:vτ})*(dudτ)*(dvdτ))
+                +(CH_Symbols[7].subs({U:uτ,V:vτ})*(dvdτ)*(dvdτ)))
+        
+        k2=-(dτ/2)*((CH_Symbols[0].subs({U:uτ+(dτ/2),V:vτ+(k1/2)})*(dudτ)*(dudτ))
+               +(CH_Symbols[2].subs({U:uτ+(dτ/2),V:vτ+(k1/2)})*(dudτ)*(dvdτ))
+               +(CH_Symbols[4].subs({U:uτ+(dτ/2),V:vτ+(k1/2)}))*(dudτ)*(dvdτ)
+               +(CH_Symbols[6].subs({U:uτ+(dτ/2),V:vτ+(k1/2)})*(dvdτ)*(dvdτ)))
+        j2=-(dτ/2)*((CH_Symbols[1].subs({U:uτ+(dτ/2),V:vτ+(j1/2)})*(dudτ)*(dudτ))
+                +(CH_Symbols[3].subs({U:uτ+(dτ/2),V:vτ+(j1/2)})*(dudτ)*(dvdτ))
+                +(CH_Symbols[5].subs({U:uτ+(dτ/2),V:vτ+(j1/2)})*(dudτ)*(dvdτ))
+                +(CH_Symbols[7].subs({U:uτ+(dτ/2),V:vτ+(j1/2)})*(dvdτ)*(dvdτ)))
+        
+        k3=-(dτ/2)*((CH_Symbols[0].subs({U:uτ+(dτ/2),V:vτ+(k2/2)})*(dudτ)*(dudτ))
+               +(CH_Symbols[2].subs({U:uτ+(dτ/2),V:vτ+(k2/2)})*(dudτ)*(dvdτ))
+               +(CH_Symbols[4].subs({U:uτ+(dτ/2),V:vτ+(k2/2)}))*(dudτ)*(dvdτ)
+               +(CH_Symbols[6].subs({U:uτ+(dτ/2),V:vτ+(k2/2)})*(dvdτ)*(dvdτ)))
+        j3=-(dτ/2)*((CH_Symbols[1].subs({U:uτ+(dτ/2),V:vτ+(j2/2)})*(dudτ)*(dudτ))
+                +(CH_Symbols[3].subs({U:uτ+(dτ/2),V:vτ+(j2/2)})*(dudτ)*(dvdτ))
+                +(CH_Symbols[5].subs({U:uτ+(dτ/2),V:vτ+(j2/2)})*(dudτ)*(dvdτ))
+                +(CH_Symbols[7].subs({U:uτ+(dτ/2),V:vτ+(j2/2)})*(dvdτ)*(dvdτ)))
+        
+
+        k4=-(dτ/2)*((CH_Symbols[0].subs({U:uτ+(dτ),V:vτ+k3})*(dudτ)*(dudτ))
+               +(CH_Symbols[2].subs({U:uτ+(dτ),V:vτ+k3})*(dudτ)*(dvdτ))
+               +(CH_Symbols[4].subs({U:uτ+(dτ),V:vτ+k3}))*(dudτ)*(dvdτ)
+               +(CH_Symbols[6].subs({U:uτ+(dτ),V:vτ+k3})*(dvdτ)*(dvdτ)))
+        j4=-(dτ/2)*((CH_Symbols[1].subs({U:uτ+(dτ),V:vτ+j3})*(dudτ)*(dudτ))
+                +(CH_Symbols[3].subs({U:uτ+(dτ),V:vτ+j3})*(dudτ)*(dvdτ))
+                +(CH_Symbols[5].subs({U:uτ+(dτ),V:vτ+j3})*(dudτ)*(dvdτ))
+                +(CH_Symbols[7].subs({U:uτ+(dτ),V:vτ+j3})*(dvdτ)*(dvdτ)))
+        uτ+=(1/6)*(k1+2*k2+2*k3+k4)
+        vτ+=(1/6)*(j1+2*j2+2*j3+j4)
+
+        dudτ+=dτ
+        dvdτ+=dτ
+
 
 
   
@@ -133,4 +165,17 @@ Excess Code:
 MetricTensor()
     print('\n')
     ChristoffelSymbols()
+
+
+
+# Geodesic Equation Formula
+ d2udτ2=-((CH_Symbols[0].subs({U:uτ,V:vτ})*(dudτ)*(dudτ))
+               +(CH_Symbols[2].subs({U:uτ,V:vτ})*(dudτ)*(dvdτ))
+               +(CH_Symbols[4].subs({U:uτ,V:vτ}))*(dudτ)*(dvdτ)
+               +(CH_Symbols[6].subs({U:uτ,V:vτ})*(dvdτ)*(dvdτ)))
+        d2vdτ2=-(CH_Symbols[1].subs({U:uτ,V:vτ})*(dudτ)*(dudτ)
+                +(CH_Symbols[3].subs({U:uτ,V:vτ})*(dudτ)*(dvdτ))
+                +(CH_Symbols[5].subs({U:uτ,V:vτ})*(dudτ)*(dvdτ))
+                +(CH_Symbols[7].subs({U:uτ,V:vτ})*(dvdτ)*(dvdτ)))
+       
 '''
